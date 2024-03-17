@@ -13,4 +13,4 @@ spec:
       releaseName: "keda"
   destination:
     server: "https://34.134.95.101"
-    namespace: "keda"
+    # namespace: "keda"
