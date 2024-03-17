@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: "keda"
-  namespace: "argocd"
 spec:
   project: smartscaler-tutorials
   source:
@@ -13,4 +12,4 @@ spec:
       releaseName: "keda"
   destination:
     server: "https://34.134.95.101"
-    # namespace: "keda"
+    namespace: "keda"
