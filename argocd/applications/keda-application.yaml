@@ -14,9 +14,3 @@ spec:
   destination:
     server: "https://34.134.95.101"
     namespace: "keda"
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
-    retry:
-      limit: 2
