@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keda
+  namespace: argocd
+spec:
+  template:
+    metadata:
+      name: "keda"
+    spec:
+      project: "smartscaler-tutorials"
+      source:
+        repoURL: https://kedacore.github.io/charts
+        targetRevision: 2.12.0
+        chart: keda
+        path:
+      destination:
+        name: "application-demo-clsuter"
+        namespace: "keda"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 2
