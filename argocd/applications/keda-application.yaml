@@ -10,7 +10,7 @@ spec:
     targetRevision: 2.13.1
     chart: keda
   destination:
-    name: "application-demo-clsuter"
+    name: "https://34.134.95.101"
     namespace: "keda"
   syncPolicy:
     syncOptions:
