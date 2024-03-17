@@ -9,6 +9,7 @@ spec:
     repoURL: https://kedacore.github.io/charts
     targetRevision: 2.13.1
     chart: keda
+    path:
   destination:
     name: "https://34.134.95.101"
     namespace: "keda"
