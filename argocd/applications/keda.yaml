@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: multi-cluster-keda
+  namespace: argocd
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          env: edge-us-south-east-2
+  - clusters:
+      selector:
+        matchLabels:
+          env: edge-ca-central-1
+  - clusters:
+      selector:
+        matchLabels:
+          env: edge-us-west-2
+  template:
+    metadata:
+      name: "keda-{{name}}"
+    spec:
+      project: customer-demo-project
+      source:
+        repoURL: https://kedacore.github.io/charts
+        targetRevision: 2.12.0
+        chart: keda
+        path:
+      destination:
+        name: "{{name}}"
+        namespace: "keda"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 2
