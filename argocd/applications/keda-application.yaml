@@ -4,21 +4,17 @@ metadata:
   name: keda
   namespace: argocd
 spec:
-  template:
-    metadata:
-      name: "keda"
-    spec:
-      project: "smartscaler-tutorials"
-      source:
-        repoURL: https://kedacore.github.io/charts
-        targetRevision: 2.13.1
-        chart: keda
-      destination:
-        name: "application-demo-clsuter"
-        namespace: "keda"
-      syncPolicy:
-        syncOptions:
-          - CreateNamespace=true
-          - ServerSideApply=true
-        retry:
-          limit: 2
+  project: "smartscaler-tutorials"
+  source:
+    repoURL: https://kedacore.github.io/charts
+    targetRevision: 2.13.1
+    chart: keda
+  destination:
+    name: "application-demo-clsuter"
+    namespace: "keda"
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 2
