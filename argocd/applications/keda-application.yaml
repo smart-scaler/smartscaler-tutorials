@@ -4,15 +4,16 @@ metadata:
   name: keda
   namespace: argocd
 spec:
-  project: "smartscaler-tutorials"
+  project: smartscaler-tutorials
   source:
+    chart: keda
     repoURL: https://kedacore.github.io/charts
     targetRevision: 2.13.1
-    chart: keda
-    path:
+    helm:
+      releaseName: keda
   destination:
-    name: "https://34.134.95.101"
-    namespace: "keda"
+    server: "https://34.134.95.101"
+    namespace: keda
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
