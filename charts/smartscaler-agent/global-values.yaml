@@ -50,8 +50,8 @@ eventAutoscaler:
       pullPolicy: IfNotPresent
 inferenceAgent:
   image:
-    repository: aveshasystems/smart-scaler-agent
-    tag: v1.8.1
+    repository: aveshadev/smart-scaler-agent
+    tag: 1.8.1-a9c263ca
     pullPolicy: IfNotPresent
   inferenceAgentConfig:
   #  Please add your config in this section in the following format
