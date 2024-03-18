@@ -1,35 +1,35 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: smartscaler-agent
-#   namespace: argocd
-# spec:
-#   project: smartscaler-tutorials
-#   destination:
-#     server: https://34.134.95.101
-#     namespace: smart-scaler
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#     retry:
-#       limit: 2
-#   sources:
-#     - repoURL: https://github.com/smart-scaler/smartscaler-tutorials.git
-#       targetRevision: HEAD
-#       path: charts/smartscaler-agent/
-#       plugin:
-#         name: helm-resolver
-#         env:
-#           - name:  "COMMAND"
-#             value: "--values values.yaml --values inference-config-override.yaml"
-#           - name:  "REPO_NAME"
-#             value: "smartscaler-agent-repo"
-#           - name:  "REPO_URL"
-#             value: "https://smartscaler.nexus.aveshalabs.io/repository/smartscaler-helm-ent-prod"
-#           - name:  CHART_NAME
-#             value: "smartscaler-agent"
-#           - name:  "CHART_VERSION"
-#             value: "1.8.1"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smartscaler-agent
+  namespace: argocd
+spec:
+  project: smartscaler-tutorials
+  destination:
+    server: https://34.134.95.101
+    namespace: smart-scaler
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 2
+  sources:
+    - repoURL: https://github.com/smart-scaler/smartscaler-tutorials.git
+      targetRevision: HEAD
+      path: charts/smartscaler-agent/
+      plugin:
+        name: helm-resolver
+        env:
+          - name:  "COMMAND"
+            value: "--values values.yaml --values inference-config-override.yaml"
+          - name:  "REPO_NAME"
+            value: "smartscaler-agent-repo"
+          - name:  "REPO_URL"
+            value: "https://smartscaler.nexus.aveshalabs.io/repository/smartscaler-helm-ent-prod"
+          - name:  CHART_NAME
+            value: "smartscaler-agent"
+          - name:  "CHART_VERSION"
+            value: "1.8.1"
