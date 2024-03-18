@@ -4,7 +4,7 @@ autoscaling:
 # Example deployment override values file for nginx
 smartscaler:
   enabled: true
-  minReplicas: 2 # Updating for event: Bohni
+  minReplicas: 1 # Resetting values after end of event: Bohni
   maxReplicas: 20 # Updating for event: Bohni
   trigger:
     type: prometheus
