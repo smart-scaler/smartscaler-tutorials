@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app2
-  namespace: app2
 spec:
   project: smartscaler-tutorials
   destination:
