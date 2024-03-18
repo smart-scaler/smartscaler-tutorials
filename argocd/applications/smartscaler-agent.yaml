@@ -23,5 +23,5 @@ spec:
         # Release name override (defaults to application name)
         releaseName: "smartscaler-agent"
         valueFiles:
-        - "../../charts/martscaler-agent/values.yaml"
-        - "../../charts/martscaler-agent/inference-config-override.yaml"
+        - "../../charts/smartscaler-agent/values.yaml"
+        - "../../charts/smartscaler-agent/inference-config-override.yaml"
