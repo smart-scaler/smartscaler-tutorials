@@ -51,7 +51,7 @@ eventAutoscaler:
 inferenceAgent:
   image:
     repository: aveshadev/smart-scaler-agent
-    tag: 1.8.1-a9c263ca
+    tag: 1.8.1-6a4c5b36
     pullPolicy: IfNotPresent
   inferenceAgentConfig:
   #  Please add your config in this section in the following format
@@ -129,7 +129,7 @@ configHelper:
     name: "config-helper-ui"
     image:
       repository: aveshadev/smartscaler-config-helper-ui
-      tag: 1.0.1-SNAPSHOT-29f62a9f
+      tag: 1.0.1-SNAPSHOT-dead5795
       pullPolicy: IfNotPresent
 
     service:
