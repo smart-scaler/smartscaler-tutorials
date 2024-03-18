@@ -83,6 +83,20 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Configure the smart-scaler (Keda ScaledObject) for this deployment.
+smartscaler:
+  enabled: false
+  deploymentName: "nginx"
+  # minReplicas: 1
+  # maxReplicas: 100
+  # trigger:
+  #   type: 
+  #   metadata:
+  #     serverAddress: 
+  #     metricName: 
+  #     query: 
+  #     threshold:
+
+# Configure the smart-scaler (Keda ScaledObject) for this deployment.
 # smartscaler:
 #   enabled: true
 #   minReplicas: 1
