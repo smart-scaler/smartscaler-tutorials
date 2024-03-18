@@ -107,7 +107,7 @@ configHelper:
     name: "config-helper-api"
     image:
       repository: aveshadev/smartscaler-config-helper-api
-      tag: 1.0.2-SNAPSHOT-e5d353d8
+      tag: 1.0.2-SNAPSHOT-2d30b9f3
       pullPolicy: IfNotPresent
 
     service:
@@ -128,7 +128,7 @@ configHelper:
     name: "config-helper-ui"
     image:
       repository: aveshadev/smartscaler-config-helper-ui
-      tag: 1.0.1-SNAPSHOT-f82cf9f5
+      tag: 1.0.1-SNAPSHOT-29f62a9f
       pullPolicy: IfNotPresent
 
     service:

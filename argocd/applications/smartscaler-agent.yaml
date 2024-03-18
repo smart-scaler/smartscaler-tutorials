@@ -24,7 +24,7 @@ spec:
         name: helm-resolver
         env:
           - name:  "COMMAND"
-            value: "--values values.yaml"
+            value: "--values values.yaml --values inference-config-override.yaml"
           - name:  "REPO_NAME"
             value: "smartscaler-agent-repo"
           - name:  "REPO_URL"
