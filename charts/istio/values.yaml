@@ -4,11 +4,11 @@
 
 base:
   global:
-    istioNamespace: smartscaler-demo-app
+    istioNamespace: istio
 
 gateway:
   global:
-    istioNamespace: smartscaler-demo-app
+    istioNamespace: istio
   service:
     # Type of service. Set to "None" to disable the service entirely
     type: ClusterIP
@@ -28,4 +28,4 @@ gateway:
 
 istiod:
   global:
-    istioNamespace: smartscaler-demo-app
+    istioNamespace: istio
