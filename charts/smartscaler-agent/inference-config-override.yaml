@@ -30,7 +30,7 @@ inferenceAgent:
           '$1', 'namespace', '(.*)'))
       - description: forwarded cpu requests
         name: cpu_requests
-        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_pod_container_resource_requests{namespace=~'app1',container=~'.*[A-Za-z0-9].*|!POD',pod=~'.*(nginx).*',resource='cpu',service='prometheus-kube-state-metrics'},'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_pod_container_resource_requests{namespace=~'app1',container=~'.*[A-Za-z0-9].*|!POD',pod=~'.*(nginx).*',resource='cpu'},'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
           '$1', 'namespace', '(.*)'))
       - description: forwarded memory usage
         name: memory_usage

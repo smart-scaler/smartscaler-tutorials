@@ -10,7 +10,7 @@ eventAutoscaler:
   # eg. 1h, 1d, 1w
   # default: 1h
   autoscalerProperties:
-    eventConfigSyncFrequency: 5m
+    eventConfigSyncFrequency: 1m
     defaultPrCreationDuration: 1h
     watchInterval: 5m # Interval to watch argocd application
     # Interval to wait (in seconds) before retrying failed PR creation
@@ -25,7 +25,7 @@ eventAutoscaler:
       # time duration before the event-start when PR would be merged
       defaultMergeDuration: 5m
       # Force merge PR if auto merge fails
-      forceMergeEnabled: false
+      forceMergeEnabled: true
   gitProperties:
     commitPrefix: "ci()"
     commitSuffix: "- Avesha Agent"
