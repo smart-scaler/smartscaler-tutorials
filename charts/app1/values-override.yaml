@@ -5,7 +5,7 @@ autoscaling:
 smartscaler:
   enabled: true
   minReplicas: 1 # Resetting values after end of event: Bohni
-  maxReplicas: 20 # Updating for event: Bohni
+  maxReplicas: 10 # Resetting values after end of cooldown duration. Event: Bohni
   trigger:
     type: prometheus
     metadata:
