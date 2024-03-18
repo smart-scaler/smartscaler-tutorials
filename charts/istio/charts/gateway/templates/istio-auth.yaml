@@ -1,0 +1,54 @@
+---
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: smart-scaler-saas-authn
+  namespace: {{ .Values.global.istioNamespace }}
+spec:
+  jwtRules:
+    - fromHeaders:
+        - name: Authorization
+          prefix: 'Bearer '
+      fromParams:
+        - auth_token
+      issuer: https://accounts.google.com
+      jwksUri: https://www.googleapis.com/oauth2/v3/certs
+      outputClaimToHeaders:
+          - header: "x-smart-scaler-claim-customer-name"
+            claim: email
+          - header: "x-smart-scaler-claim-issuer"
+            claim: iss
+          - header: "x-smart-scaler-claim-scope"
+            claim: aud
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+      istio: ingressgateway
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: authz
+  namespace: {{ .Values.global.istioNamespace }}
+spec:
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+      istio: ingressgateway
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            paths:
+              - "/oauth2/token"
+    - to:
+        - operation:
+            paths:
+              - "/*"
+      when:
+        - key: request.auth.claims[iss]
+          values:
+            - https://accounts.google.com
+        - key: request.auth.claims[email]
+          values:
+            - "*@smartscaler.iam.gserviceaccount.com"
