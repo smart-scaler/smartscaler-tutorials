@@ -1,5 +1,5 @@
 # Sample template for a ScaledObject
-{{- if and (isset . "value.smartscaler.enabled") .value.smartscaler.enabled }}
+{{- if .value.smartscaler.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
