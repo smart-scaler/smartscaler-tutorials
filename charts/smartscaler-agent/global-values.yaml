@@ -94,12 +94,12 @@ dataSources:
     password: ""
 smartscalerApi:
   existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
-  username: ""
-  password: ""
+  username: tenant-apollo-apigw-user
+  password: Ts5FGwc5YTcGE
 smartscalerMetrics:
   existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
-  username: ""
-  password: ""
+  username: tenant-apollo-metricsgw-user
+  password: O3CNeUaRZhpW0
 
 configHelper:
   enabled: false
