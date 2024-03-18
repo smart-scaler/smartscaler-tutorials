@@ -1,20 +1,20 @@
 # Sample template for a ScaledObject
-{{- if .value.smartscaler.enabled }}
+{{- if .Values.smartscaler.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ .value.smartscaler.deploymentName }}-scaler
+  name: {{ .Values.smartscaler.deploymentName }}-scaler
 spec:
   scaleTargetRef:
     kind: Deployment
-    name: {{ .value.smartscaler.deploymentName }}
-  minReplicaCount: {{ .value.smartscaler.minReplicas }}
-  maxReplicaCount: {{ .value.smartscaler.maxReplicas }}
+    name: {{ .Values.smartscaler.deploymentName }}
+  minReplicaCount: {{ .Values.smartscaler.minReplicas }}
+  maxReplicaCount: {{ .Values.smartscaler.maxReplicas }}
   cooldownPeriod: 60
   pollingInterval: 1
   fallback:
     failureThreshold: 1
-    replicas: {{ .value.smartscaler.maxReplicas }}
+    replicas: {{ .Values.smartscaler.maxReplicas }}
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
@@ -27,9 +27,9 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: {{ .value.smartscaler.trigger.metadata.serverAddress }}
-        metricName: {{ .value.smartscaler.trigger.metadata.metricName }}
+        serverAddress: {{ .Values.smartscaler.trigger.metadata.serverAddress }}
+        metricName: {{ .Values.smartscaler.trigger.metadata.metricName }}
         ignoreNullValues: "false"
-        query: {{ .value.smartscaler.trigger.metadata.query }}
-        threshold: "{{ .value.smartscaler.trigger.metadata.threshold }}"
+        query: {{ .Values.smartscaler.trigger.metadata.query }}
+        threshold: "{{ .Values.smartscaler.trigger.metadata.threshold }}"
 {{- end }}
