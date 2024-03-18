@@ -4,6 +4,9 @@ metadata:
   name: "keda"
 spec:
   project: smartscaler-tutorials
+  syncPolicy:
+    syncOptions:
+    - ServerSideApply=true
   source:
     chart: "keda"
     repoURL: https://kedacore.github.io/charts
