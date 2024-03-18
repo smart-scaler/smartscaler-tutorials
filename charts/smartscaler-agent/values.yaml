@@ -9,6 +9,7 @@ eventAutoscaler:
   # eg. 1h, 1d, 1w
   # default: 1h
   autoscalerProperties:
+    eventConfigSyncFrequency: 5m
     defaultPrCreationDuration: 1h
     watchInterval: 5m # Interval to watch argocd application
     # Interval to wait (in seconds) before retrying failed PR creation
@@ -38,24 +39,26 @@ eventAutoscaler:
   logLevel: DEBUG
   image:
     repository: aveshasystems/agent-controller
-    tag: v0.4.3
+    tag: v0.5.2
     pullPolicy: IfNotPresent
   gitOperationsService:
     name: git-operations
     image:
       repository: aveshasystems/autoscaler-git-operations
-      tag: v0.2.5
+      tag: v0.2.6
       pullPolicy: IfNotPresent
 inferenceAgent:
   image:
     repository: aveshasystems/smart-scaler-agent
-    tag: v1.6.0
+    tag: v1.8.1
     pullPolicy: IfNotPresent
   inferenceAgentConfig:
   #  Please add your config in this section in the following format
-  # app_datasource:
-  #   datadog:
-  #     url: ""
+  app_datasource:
+    datadog:
+      url: ""
+    prometheus:
+      url: ""
   # smartscaler_api:
   #   url: ""
   # metric_interval:
@@ -82,13 +85,62 @@ imagePullSecrets:
 dataSources:
   datadog:
     existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
-    apiKey: "test"
-    appkey: "test"
+    apiKey: ""
+    appkey: ""
   prometheus:
     existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
-    username: "test"
-    password: "test"
+    username: ""
+    password: ""
 smartscalerApi:
   existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
-  username: "test"
-  password: "test"
+  username: ""
+  password: ""
+smartscalerMetrics:
+  existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+  username: ""
+  password: ""
+
+configHelper:
+  enabled: false
+  api:
+    replicaCount: 1
+    name: "config-helper-api"
+    image:
+      repository: aveshadev/smartscaler-config-helper-api
+      tag: 1.0.2-SNAPSHOT-e5d353d8
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-api
+      type: ClusterIP
+      port: 80
+      targetPort: 8080
+
+    resources: {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
+  ui:
+    replicaCount: 1
+    name: "config-helper-ui"
+    image:
+      repository: aveshadev/smartscaler-config-helper-ui
+      tag: 1.0.1-SNAPSHOT-f82cf9f5
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-ui
+      type: ClusterIP
+      port: 80
+      targetPort: 3000
+
+    resources: {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
