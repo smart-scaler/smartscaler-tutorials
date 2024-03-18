@@ -56,5 +56,5 @@ inferenceAgent:
     metric_interval: 60
     push_interval: 15
     smartscaler_api:
-      url: https://apigateway.apollo.saas.smart-scaler.io/
+      url: https://apigateway.apollo.saas.smart-scaler.io
     smartscaler_job_name: app1-smart-scaler-agent
