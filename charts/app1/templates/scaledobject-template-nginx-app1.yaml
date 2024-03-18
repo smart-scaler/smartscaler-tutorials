@@ -1,5 +1,5 @@
 # Sample template for a ScaledObject
-{{- if and (hasKey .Values "smartscaler") (hasKey .Values "smartscaler.enabled") .Values.smartscaler.enabled }}
+{{- if .Values.smartscaler.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
