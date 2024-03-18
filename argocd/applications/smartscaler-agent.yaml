@@ -24,4 +24,4 @@ spec:
         releaseName: "smartscaler-agent"
         valueFiles:
         - "../../charts/smartscaler-agent/values.yaml"
-        - "../../charts/smartscaler-agent/inference-config-override.yaml"
+        # - "../../charts/smartscaler-agent/inference-config-override.yaml"
