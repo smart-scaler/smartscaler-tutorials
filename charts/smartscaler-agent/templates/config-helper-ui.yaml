@@ -1,0 +1,157 @@
+{{- if .Values.configHelper.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: config-helper-ui
+  {{- if and
+    (hasKey .Values "configHelper")
+    (hasKey .Values.configHelper "ui")
+    (hasKey .Values.configHelper.ui "name")
+  }}
+  name: {{ .Values.configHelper.ui.name | default "config-helper-ui" }}
+  {{- else }}
+  name: "config-helper-ui"
+  {{- end}} 
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if and
+    (hasKey .Values "configHelper")
+    (hasKey .Values.configHelper "ui")
+    (hasKey .Values.configHelper.ui "replicaCount")
+  }}
+  replicas: {{ .Values.configHelper.ui.replicaCount | default "1" }}
+  {{- else }}
+  replicas: 1
+  {{- end}} 
+  selector:
+    matchLabels:
+      app: config-helper-ui
+  template:
+    metadata:
+      labels:
+        app: config-helper-ui
+    spec:
+      containers:
+      {{- if and
+          (hasKey .Values "configHelper")
+          (hasKey .Values.configHelper "ui")
+          (hasKey .Values.configHelper.ui "image")
+          (hasKey .Values.configHelper.ui.image "repository")
+          (hasKey .Values.configHelper.ui.image "tag")
+      }}
+      - image: '{{ .Values.configHelper.ui.image.repository }}:{{ .Values.configHelper.ui.image.tag }}'
+      {{- else }}
+      - image: 'aveshadev/smartscaler-config-helper-ui:latest'
+      {{- end}} 
+      {{- if and
+          (hasKey .Values "configHelper")
+          (hasKey .Values.configHelper "ui")
+          (hasKey .Values.configHelper.ui "imagePullPolicy")
+      }}
+        imagePullPolicy: {{ .Values.configHelper.ui.imagePullPolicy | default "Always" }}
+      {{- else }}
+        imagePullPolicy: "Always"
+      {{- end}} 
+      {{- if and
+          (hasKey .Values "configHelper")
+          (hasKey .Values.configHelper "ui")
+          (hasKey .Values.configHelper.ui "name")
+      }}
+        name: {{ .Values.configHelper.ui.name | default "config-helper-ui" }}
+      {{- else }}
+        name: "config-helper-ui"
+      {{- end}} 
+        ports:
+          - name: http
+            {{- if and
+              (hasKey .Values "configHelper")
+              (hasKey .Values.configHelper "ui")
+              (hasKey .Values.configHelper.ui "service")
+              (hasKey .Values.configHelper.ui.service "targetPort")
+            }}
+            containerPort: {{ .Values.configHelper.ui.service.targetPort | default "3000" }}
+          {{- else }}
+            containerPort: 3000
+          {{- end}} 
+            protocol: TCP
+        env:
+        - name: NEXT_PUBLIC_BASE_URL
+          {{- if and
+              (hasKey .Values "configHelper")
+              (hasKey .Values.configHelper "api")
+              (hasKey .Values.configHelper.api "service")
+              (hasKey .Values.configHelper.api.service "name")
+          }}
+          value: http://{{ .Values.configHelper.api.service.name | default "NOT-PROVIDED" }}:80
+          {{- else }}
+          value: http://config-helper-api:80
+          {{- end}} 
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+        {{- if and
+            (hasKey .Values "configHelper")
+            (hasKey .Values.configHelper "ui")
+            (hasKey .Values.configHelper.ui "resources")
+        }}
+        {{ toYaml .Values.configHelper.ui.resources | indent 12 }}
+        {{- end}} 
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretsName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  {{- if and
+    (hasKey .Values "configHelper")
+    (hasKey .Values.configHelper "ui")
+    (hasKey .Values.configHelper.ui "name")
+  }}
+  name: {{ .Values.configHelper.ui.name | default "config-helper-ui" }}
+  {{- else }}
+  name: "config-helper-ui"
+  {{- end}}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: config-helper-ui
+  ports:
+    - protocol: TCP
+      {{- if and
+        (hasKey .Values "configHelper")
+        (hasKey .Values.configHelper "ui")
+        (hasKey .Values.configHelper.ui "service")
+        (hasKey .Values.configHelper.ui.service "port")
+      }}
+      port: {{ .Values.configHelper.ui.service.port | default "80"}}
+      {{- else }}
+      port: 80
+      {{- end}}
+      {{- if and
+        (hasKey .Values "configHelper")
+        (hasKey .Values.configHelper "ui")
+        (hasKey .Values.configHelper.ui "service")
+        (hasKey .Values.configHelper.ui.service "targetPort")
+      }}
+      targetPort: {{ .Values.configHelper.ui.service.targetPort | default "3000"}}
+      {{- else }}
+      targetPort: 3000
+      {{- end}}
+  {{- if and
+    (hasKey .Values "configHelper")
+    (hasKey .Values.configHelper "ui")
+    (hasKey .Values.configHelper.ui "service")
+    (hasKey .Values.configHelper.ui.service "targetPort")
+  }}
+  type: {{ .Values.configHelper.ui.service.type | default "ClusterIP" }}
+  {{- else }}
+  type: "ClusterIP"
+  {{- end}} 
+{{- end}}

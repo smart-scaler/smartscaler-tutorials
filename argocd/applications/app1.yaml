@@ -24,4 +24,4 @@ spec:
         releaseName: "app1"
         valueFiles:
         - "../../charts/app1/values.yaml"
-        - "../../charts/app2/values-override.yaml"
+        - "../../charts/app1/values-override.yaml"

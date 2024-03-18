@@ -18,17 +18,10 @@ spec:
   sources:
     - repoURL: https://github.com/smart-scaler/smartscaler-tutorials.git
       targetRevision: HEAD
-      path: charts/smartscaler-agent/
-      plugin:
-        name: helm-resolver
-        env:
-          - name:  "COMMAND"
-            value: "--values values.yaml --values inference-config-override.yaml"
-          - name:  "REPO_NAME"
-            value: "smartscaler-agent-repo"
-          - name:  "REPO_URL"
-            value: "https://smartscaler.nexus.aveshalabs.io/repository/smartscaler-helm-ent-prod"
-          - name:  CHART_NAME
-            value: "smartscaler-agent"
-          - name:  "CHART_VERSION"
-            value: "1.8.1"
+      path: "charts/smartscaler-agent/"
+      helm:
+        # Release name override (defaults to application name)
+        releaseName: "smartscaler-agent"
+        valueFiles:
+        - "../../charts/martscaler-agent/values.yaml"
+        - "../../charts/martscaler-agent/inference-config-override.yaml"
