@@ -4,7 +4,7 @@ autoscaling:
 # Example deployment override values file for nginx
 smartscaler:
   enabled: true
-  minReplicas: 2 # Updating for event: Latam Event Test
+  minReplicas: 1 # Resetting values after end of event: Latam Event Test
   maxReplicas: 20 # Updating for event: Latam Event Test
   trigger:
     type: prometheus
