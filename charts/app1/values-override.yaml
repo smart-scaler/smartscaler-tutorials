@@ -5,7 +5,7 @@ autoscaling:
 smartscaler:
   enabled: true
   minReplicas: 1 # Resetting values after end of event: Latam Event Test
-  maxReplicas: 20 # Updating for event: Latam Event Test
+  maxReplicas: 10 # Resetting values after end of cooldown duration. Event: Latam Event Test
   trigger:
     type: prometheus
     metadata:
