@@ -9,7 +9,7 @@ smartscaler:
   trigger:
     type: prometheus
     metadata:
-      serverAddress: https://metricsgateway.apollo.saas.smart-scaler.io/
+      serverAddress: https://metricsgateway-apollo.saas1.smart-scaler.io/
       metricName: hpa_num_pods
       query: hpa_num_pods{job="smartscaler_nginx_app1_tutorial-agent"}
       threshold: "1"
