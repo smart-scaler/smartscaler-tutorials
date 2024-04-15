@@ -57,7 +57,7 @@ inferenceAgent:
       - description: forwarded rps data from istio requests
         name: istio_requests_total_rate
         query: sum(rate(label_replace(istio_requests_total{namespace=~'app1', destination_workload=~'.*(nginx).*'},'kube_namespace',
-          '$1', 'namespace', '(.*)')[1m:])) by (destination_service_name,response_code,destination_workload,source_workload,reporter,kube_namespace)
+          '$1', 'namespace', '(.*)')[2m:])) by (destination_service_name,response_code,destination_workload,source_workload,reporter,kube_namespace)
       - description: forwarded current number of pods
         name: current_pods
         query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_deployment_spec_replicas{namespace=~'app1',deployment=~'.*(nginx).*'},
