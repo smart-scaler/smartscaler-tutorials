@@ -29,13 +29,6 @@ spec:
         - name: inference-agent
           image: '{{ .Values.inferenceAgent.image.repository }}:{{ .Values.inferenceAgent.image.tag }}'
           imagePullPolicy: {{ .Values.inferenceAgent.image.pullPolicy }}
-          command: ["/venv/bin/python3"]
-          args:
-            [
-              "inference-agent/metrics_agent.py",
-              "--config",
-              "/home/avesha/config/inference-agent-config.json",
-            ]
           resources:
             requests:
               memory: 2Gi
@@ -77,10 +70,24 @@ spec:
                   name: {{ template "datadog.secretName" . }}
                   key: DD_APP_KEY
                   optional: true
-
+            - name: SAAS_API_HOST_URL
+              value: {{ required "A valid value is required!" .Values.agentConfiguration.host }}
+            - name: SMART_SCALER_AGENT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: clientId
+                  name: smart-scaler-agent-api-credentials
+                  optional: false
+            - name: SMART_SCALER_AGENT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: smart-scaler-agent-api-credentials
+                  optional: false
           volumeMounts:
             - name: config-volume
               mountPath: /home/avesha/config
 
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretsName }}
+      serviceAccountName: agent-controller-controller-manager

@@ -32,8 +32,8 @@ kind: ConfigMap
 metadata:
   name: smart-scaler-config
 data:
-  inference-agent-config.json: |
-        {{- toJson .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
+  inference-agent-config.yaml: |
+        {{- toYaml .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
 
 ---
 

@@ -83,18 +83,18 @@ spec:
               (hasKey .Values.configHelper.api "service")
               (hasKey .Values.configHelper.api.service "name")
           }}
-          value: http://{{ .Values.configHelper.api.service.name | default "NOT-PROVIDED" }}:80
+          value: http://{{ .Values.configHelper.api.service.name | default "NOT-PROVIDED" }}:8080
           {{- else }}
-          value: http://config-helper-api:80
+          value: http://config-helper-api:8080
           {{- end}} 
         livenessProbe:
           httpGet:
             path: /
-            port: http
+            port: 8080
         readinessProbe:
           httpGet:
             path: /
-            port: http
+            port: 8080
         resources:
         {{- if and
             (hasKey .Values "configHelper")
@@ -140,9 +140,9 @@ spec:
         (hasKey .Values.configHelper.ui "service")
         (hasKey .Values.configHelper.ui.service "targetPort")
       }}
-      targetPort: {{ .Values.configHelper.ui.service.targetPort | default "3000"}}
-      {{- else }}
-      targetPort: 3000
+      # targetPort: {{ .Values.configHelper.ui.service.targetPort | default "3000"}}
+      # {{- else }}
+      # targetPort: 3000
       {{- end}}
   {{- if and
     (hasKey .Values "configHelper")
