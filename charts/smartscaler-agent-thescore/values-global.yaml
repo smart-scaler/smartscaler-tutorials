@@ -67,11 +67,11 @@ inferenceAgent:
         name: istio_request_duration_milliseconds_bucket_rate
         query: sum(irate(label_replace(istio_request_duration_milliseconds_bucket{namespace=~'app1',reporter=~'destination',
           destination_workload=~'.*(nginx).*'},'kube_namespace', '$1', 'namespace',
-          '(.*)')[1m:])) by (le, response_code, destination_service_name, destination_workload,
+          '(.*)')[2m:])) by (le, response_code, destination_service_name, destination_workload,
           source_workload, reporter, kube_namespace)
       - description: forwarded cpu usage
         name: cpu_usage
-        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(rate(container_cpu_usage_seconds_total{namespace=~'app1',pod=~'.*(nginx).*'}[1m]),'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(rate(container_cpu_usage_seconds_total{namespace=~'app1',pod=~'.*(nginx).*'}[2m]),'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
           '$1', 'namespace', '(.*)'))*(10^9)
       - description: forwarded cpu requests
         name: cpu_requests
