@@ -11,5 +11,5 @@ smartscaler:
     metadata:
       serverAddress: https://metricsgateway.2f396c0d.saas-sandbox.smart-scaler.io/
       metricName: smartscaler_hpa_num_pods
-      query: smartscaler_hpa_num_pods{ss_deployment_name="nginx", ss_namespace="app1", ss_cluster_name="smart-scaler-agent-thescore"}
+      query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
       threshold: "1"
