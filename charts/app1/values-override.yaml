@@ -5,7 +5,7 @@ autoscaling:
 smartscaler:
   enabled: true
   minReplicas: 1 # Resetting values after end of event: scale-pod
-  maxReplicas: 60 # Updating for event: scale-pod
+  maxReplicas: 30 # Resetting values after end of cooldown duration. Event: scale-pod
   trigger:
     type: prometheus
     metadata:
