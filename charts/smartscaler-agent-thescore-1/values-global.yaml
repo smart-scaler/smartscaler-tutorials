@@ -1,0 +1,186 @@
+eventAutoscaler:
+  # time duration before the eventstarttime when first PR would be created
+  # eg. 1h, 1d, 1w
+  # default: 1h
+  autoscalerProperties:
+    eventConfigSyncFrequency: 5m
+    defaultPrCreationDuration: 1h
+    watchInterval: 5m # Interval to watch argocd application
+    # Interval to wait (in seconds) before retrying failed PR creation
+    defaultRetryInterval: 15
+    # Number of times to retry failed PR creation
+    defaultMaxRetryAttempts: 5
+    scalingController:
+      apiVersion: keda.sh/v1alpha1
+      kind: ScaledObject
+    pullRequestMergeSettings:
+      autoMergeEnabled: true
+      # time duration before the event-start when PR would be merged
+      defaultMergeDuration: 5m
+      # Force merge PR if auto merge fails
+      forceMergeEnabled: false
+  gitProperties:
+    commitPrefix: "ci()"
+    commitSuffix: "- Avesha Agent"
+    commitSignoff: false
+    commitAuthorName: ""
+    commitAuthorEmail: ""
+    prTitleFormat: "ci(): %s"
+    prDescriptionFormat: ""
+    prAssignees: []
+    prReviewers: []
+    prLabels: []
+  logLevel: DEBUG
+  image:
+    repository: aveshasystems/agent-controller
+    tag: v0.5.2
+    pullPolicy: IfNotPresent
+  gitOperationsService:
+    name: git-operations
+    image:
+      repository: aveshasystems/autoscaler-git-operations
+      tag: v0.2.6
+      pullPolicy: IfNotPresent
+inferenceAgent:
+  image:
+    repository: aveshasystems/smart-scaler-agent
+    tag: v1.8.2
+    pullPolicy: IfNotPresent
+  inferenceAgentConfig:
+    app:
+    - metric_labels:
+        app: app1
+        app_version: "1.0"
+        customer: tenant-apollo
+        kube_cluster_name: smart-scaler-agent-thescore
+      metrics:
+      - description: forwarded rps data from istio requests
+        name: istio_requests_total_rate
+        query: sum(rate(label_replace(istio_requests_total{namespace=~'app1', destination_workload=~'.*(nginx).*'},'kube_namespace',
+          '$1', 'namespace', '(.*)')[2m:])) by (destination_service_name,response_code,destination_workload,source_workload,reporter,kube_namespace)
+      - description: forwarded current number of pods
+        name: current_pods
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_deployment_spec_replicas{namespace=~'app1',deployment=~'.*(nginx).*'},
+          'kube_deployment', '$1', 'deployment', '(.*)'),'kube_namespace', '$1', 'namespace',
+          '(.*)'))
+      - description: forwarded latency data from istio requests
+        name: istio_request_duration_milliseconds_bucket_rate
+        query: sum(irate(label_replace(istio_request_duration_milliseconds_bucket{namespace=~'app1',reporter=~'destination',
+          destination_workload=~'.*(nginx).*'},'kube_namespace', '$1', 'namespace',
+          '(.*)')[2m:])) by (le, response_code, destination_service_name, destination_workload,
+          source_workload, reporter, kube_namespace)
+      - description: forwarded cpu usage
+        name: cpu_usage
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(rate(container_cpu_usage_seconds_total{namespace=~'app1',pod=~'.*(nginx).*'}[2m]),'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
+          '$1', 'namespace', '(.*)'))*(10^9)
+      - description: forwarded cpu requests
+        name: cpu_requests
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_pod_container_resource_requests{namespace=~'app1',container=~'.*[A-Za-z0-9].*|!POD',pod=~'.*(nginx).*',resource='cpu'},'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
+          '$1', 'namespace', '(.*)'))
+      - description: forwarded memory usage
+        name: memory_usage
+        query: (avg (label_replace(label_replace(container_memory_working_set_bytes{namespace=~'app1',pod=~'.*(nginx).*'},
+          'kube_deployment', '$1', 'pod', '(.*)-(.*)-(.*)'), 'kube_namespace', '$1',
+          'namespace', '(.*)')) by (kube_deployment,kube_namespace))
+      - description: forwarded memory requests
+        name: memory_requests
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_pod_container_resource_requests{namespace=~'app1',container=~'.*[A-Za-z0-9].*|!POD',pod=~'.*(nginx).*',resource='memory'},'kube_deployment','$1','pod','(.+)-(.+)-(.+)'),'kube_namespace',
+          '$1', 'namespace', '(.*)'))
+      - description: forwarded pods scheduled
+        name: pods_scheduled
+        query: sum by (kube_deployment,kube_namespace) (label_replace(label_replace(kube_deployment_spec_replicas{namespace=~'app1',deployment=~'.*(nginx).*'},
+          'kube_deployment', '$1', 'deployment', '(.*)'),'kube_namespace', '$1', 'namespace',
+          '(.*)'))
+      smart-scaler-enabled-services:
+      - namespace: app1
+        services:
+        - nginx
+    app_datasource:
+      prometheus:
+        url: http://10.100.248.141:9090
+    metric_interval: 60
+    push_interval: 15
+    smartscaler_api:
+      url: https://apigateway-apollo.saas1.smart-scaler.io
+    smartscaler_job_name: app1-smart-scaler-agent
+
+imagePullSecretsName: "smart-scaler-image-pull-secret"
+# leave the below fields empty if secrets are managed externally.
+imagePullSecrets:
+  repository: ## Value to be used incase using the docker hub images-  https://index.docker.io/v1/
+  username:
+  password:
+  email:
+  dockerconfigjson: ## Value to be used if using external secret mangers
+dataSources:
+  datadog:
+    existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+    apiKey: ""
+    appkey: ""
+  prometheus:
+    existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+    username: ""
+    password: ""
+smartscalerApi:
+  existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+  username: "tenant-apollo-apigw-user"
+  password: "Ts5FGwc5YTcGE"
+smartscalerMetrics:
+  existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+  username: "tenant-apollo-metricsgw-user"
+  password: "O3CNeUaRZhpW0"
+agentConfiguration:
+  host: https://gateway.saas1.smart-scaler.io
+  # Do not change this
+  # User needs to change clusterDisplayName to match the cluster name you defined in Datadog/Prometheus/New Relic or another metrics data source
+  clusterDisplayName: smart-scaler-agent-thescore
+  # Do not change this
+  clientID: tenant-apollo
+  # Do not change this
+  clientSecret: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRREVDcThpV0xVM3plQzUKcDE0RTlXakpPcnFndnZ3b3hlc250cG42Z3o0dlFKRXBVRWNUQmp1VndIaXpHWEEvbXBxUXB3TCt3VVFNWjR2RQpYNk1ZZ2FBdCttQ0hUN09OMWRYYTBjbUFsQlhnNkN6bHVJeW9yQnY0dytDNWZJb3hZMHNlY3BjbVZDaUg5SllVCllSMm1MQzFXbVRJMVNNVnJLWStRaGVhQ3VrOEpGOWFKQ0YrbmJ2eUJVMGJWQ2FkVVpCTFFMQlQwd2UrK0l2UnQKemw5eXlxeEg3U21MVS9UMnMxcE5JS2cwbVZiV09VQnRsc1RJMjVrdFJaR2EwN3RvdlU5b1pmN0pBd3MwV0F1bgpadlZha28wSldGN3E0WjVCL2U1RWpYay9STnM1Zi9PWjR1UDV0cWQ2eWpDMktRdG1qYUtTQ05yRnA2VkphME10ClpWQmNHVVF4QWdNQkFBRUNnZ0VBRlBCV3N5YVNLWVVVK2dObk9vU2JSZlgrd2NWUVljcjg4a3VSdi9UMVp2N2cKbWs3cm5udXhrTTNEWG83S28xS0FMSS9ZRlMxL2x3c1d2YmxnemxEbkVzNGRzZ29vWVk5N3hXRFhvc0wrWUx5dgpzZlFmbXZMeUZHU1lpN3RDZCtLMC91b3FuSUtMNXpTUHRKcklXOHUzWm5yYnB0OFFUZ0U5QnlqVUhYV29sQzMrCld6RG52ckxGd05XVW5uaW92eU1mRDZUdzFTQVQ3WGlnSEV6WWt2bWsvQmY5dFhDb0hYejNNN3dBZ1NsUGxTVWQKTkRtNFdLYk1pcUlxVFBSLytDS0N2blNsUjRFSENQbkpNc0pkUnVZTjlWbC9LUXpDNHVpT2FHb2hFc2hEbDJQNQoraEVpUndSd3JzdDJnd2JlMkplVTh5cktZbnFtOUZ4MnFRNklmT1BxZVFLQmdRRDZObWZsMFpLcFI0eFcwOWZECk5sd08rY1Jad0N0c3V5MDRhaUFRMGdRNHlXMXB3THMvZU5wcUMvK1JtQWRLbU96eDNPdEU3cGVaWkpZUlRuaHUKKzFWckcvK05MdlBJUVh1alpPaXZ3UW11eVF3NVVSV3U3WkFqYmFYZ202WUJ2WURRRkdyM2ovTXh1ZmJaT3ZVLwpyQTdSSXhhaTlsRWREc3l1c3NWNWpoSkRXUUtCZ1FESWs0T3pXdHZrZi9PSG5NSDlwdTRWTEErL3M0MGJNZ0lJCmkwOWU0SXlGdm5rL0g4cWg1STZoZXQrcFNYL0xRdmtvR2dyQTNBNlJ4ZU90bi8yVjJad1ErUE9IdnN0UVVNNjIKdTQyK3Y3VlYvZDJyNE1iWllES3kxZVhJSSs5ZUczd3BJMTV5bE5pN3FCLzdKRVpZMmpYby9ZdXVoSUZ3TFlMbwphVU9MRVJxa21RS0JnUURjeU1jekpwTTRaaGJ5d3VsZnF3YmVmQXlEZWF1WHZTNXcya3hESzE1b1VXMEhaUGFWClVtbkFLNmd1NjZ4N2FhZWkzK0tHSjlhRGx4dElXQ3F6RzNuTEVxQ1VEdnMwR0h3bHVMUU42ZE5HZE1jaGlHZ08KdkRkMDI1c0VMN1B6VXlsbjhxeFVtS1BxbkFLeXVuQ1A1NTRIY3VQVmxtNEtxdlYzcmUzTWpjMlZ1UUtCZ0g3KwpGd2E1NGp1Y1gzNWZXOXZUa3k1SWhYZ2tvSlMxWnVBdUJBVFlPMkI2cHAyMjdUN3ZUUGNrcXZPdUc0R0FWK3h5CkFKajNPeXBFbHREWldWOUZOakR3enBBRjF3aDFBVXhsRjJ2TVNXMjJuR0Uwb2ZJRG5GWHFZK0FDRUk0TzdOL0gKQ3dlVkFseGVLRkdFT0I0Tm10QjNwN2JKSW9MNTdjWmt6MlQvWVZVUkFvR0JBTlhNTXRYRXZwWkZ0NndQUWQwTQpXSUxjMERBR3dMaFVhRXMxOS9LZzFVVFdDUXZZVjNPVzVaQmVSRkNWNWRuYlAwMitrbkFmM09pa3ltd2tOSWRzCmI4Sko5YlZ6RndkYlA0WDdTWlVIYzVEbXZrSEw3Wm5HMVJReW1BdXpwM21DditLSlVmZGlhNFlVdHBDOUlpdzMKU3JxTUpBQlVqeFBwS2kyQlZkMnlPbUQ1Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+configHelper:
+  enabled: true
+  api:
+    replicaCount: 1
+    name: "config-helper-api"
+    image:
+      repository: aveshasystems/smartscaler-config-helper-api
+      tag: v1.0.2
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-api
+      type: ClusterIP
+      port: 80
+      targetPort: 8080
+
+    resources:
+      {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
+  ui:
+    replicaCount: 1
+    name: "config-helper-ui"
+    image:
+      repository: aveshasystems/smartscaler-config-helper-ui
+      tag: v1.0.1
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-ui
+      type: ClusterIP
+      port: 80
+      targetPort: 3000
+
+    resources:
+      {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi

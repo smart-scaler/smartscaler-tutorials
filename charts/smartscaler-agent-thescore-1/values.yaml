@@ -1,0 +1,147 @@
+eventAutoscaler:
+  # time duration before the eventstarttime when first PR would be created
+  # eg. 1h, 1d, 1w
+  # default: 1h
+  autoscalerProperties:
+    eventConfigSyncFrequency: 5m
+    defaultPrCreationDuration: 1h
+    watchInterval: 5m # Interval to watch argocd application
+    # Interval to wait (in seconds) before retrying failed PR creation
+    defaultRetryInterval: 15
+    # Number of times to retry failed PR creation
+    defaultMaxRetryAttempts: 5
+    scalingController:
+      apiVersion: keda.sh/v1alpha1
+      kind: ScaledObject
+    pullRequestMergeSettings:
+      autoMergeEnabled: true
+      # time duration before the event-start when PR would be merged
+      defaultMergeDuration: 5m
+      # Force merge PR if auto merge fails
+      forceMergeEnabled: false
+  gitProperties:
+    commitPrefix: "ci()"
+    commitSuffix: "- Avesha Agent"
+    commitSignoff: false
+    commitAuthorName: ""
+    commitAuthorEmail: ""
+    prTitleFormat: "ci(): %s"
+    prDescriptionFormat: ""
+    prAssignees: []
+    prReviewers: []
+    prLabels: []
+  logLevel: DEBUG
+  image:
+    repository: aveshasystems/agent-controller
+    tag: v0.5.2
+    pullPolicy: IfNotPresent
+  gitOperationsService:
+    name: git-operations
+    image:
+      repository: aveshasystems/autoscaler-git-operations
+      tag: v0.2.6
+      pullPolicy: IfNotPresent
+inferenceAgent:
+  image:
+    repository: aveshasystems/smart-scaler-agent
+    tag: v1.8.2
+    pullPolicy: IfNotPresent
+  inferenceAgentConfig:
+    #  Please add your config in this section in the following format
+    app_datasource:
+      datadog:
+        url: ""
+      prometheus:
+        url: ""
+  # smartscaler_api:
+  #   url: ""
+  # metric_interval:
+  # push_interval:
+  # smartscaler_job_name: ""
+  # app:
+  # - metric_labels:
+  #     app: ""
+  #     customer: ""
+  #     app_version:
+  #   metrics:
+  #   - name: ""
+  #     description: ""
+  #     query: ""
+
+imagePullSecretsName: "smart-scaler-image-pull-secret"
+# leave the below fields empty if secrets are managed externally.
+imagePullSecrets:
+  repository: ## Value to be used incase using the docker hub images-  https://index.docker.io/v1/
+  username:
+  password:
+  email:
+  dockerconfigjson: ## Value to be used if using external secret mangers
+dataSources:
+  datadog:
+    existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+    apiKey: ""
+    appkey: ""
+  prometheus:
+    existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+    username: ""
+    password: ""
+smartscalerApi:
+  existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+  username: ""
+  password: ""
+smartscalerMetrics:
+  existingSecret: "" ## if existingSecret value is provided then below values will be ignored, use below keys in existing secret
+  username: ""
+  password: ""
+agentConfiguration:
+  host:
+  clusterDisplayName: smart-scaler-agent
+  clientID:
+  clientSecret:
+
+configHelper:
+  enabled: false
+  api:
+    replicaCount: 1
+    name: "config-helper-api"
+    image:
+      repository: aveshasystems/smartscaler-config-helper-api
+      tag: v1.0.2
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-api
+      type: ClusterIP
+      port: 80
+      targetPort: 8080
+
+    resources:
+      {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
+  ui:
+    replicaCount: 1
+    name: "config-helper-ui"
+    image:
+      repository: aveshasystems/smartscaler-config-helper-ui
+      tag: v1.0.1
+      pullPolicy: IfNotPresent
+
+    service:
+      name: config-helper-ui
+      type: ClusterIP
+      port: 80
+      targetPort: 3000
+
+    resources:
+      {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi

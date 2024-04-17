@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-controller-autoscaler-config
+data:
+  autoscaler-properties.yaml: |
+       {{- toYaml .Values.eventAutoscaler.autoscalerProperties | nindent 4 }}
+  git-properties.yaml: |
+        {{- toYaml .Values.eventAutoscaler.gitProperties | nindent 4 }}
+---
+
+apiVersion: v1
+data:
+  controller_manager_config.yaml: |
+    apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
+    kind: ControllerManagerConfig
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+    leaderElection:
+      leaderElect: true
+      resourceName: 35a65c38.kubeslice.io
+kind: ConfigMap
+metadata:
+  name: agent-controller-manager-config
+--- 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-scaler-config
+data:
+  inference-agent-config.json: |
+        {{- toJson .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
+
+---
+
