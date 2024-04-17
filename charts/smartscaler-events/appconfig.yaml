@@ -1,10 +1,9 @@
+
 apiVersion: v1
 kind: Secret
 metadata:
   name: git-access-secret
   namespace: smart-scaler
-  labels:
-    agent.smart-scaler.io/secret-type: repository
 type: Opaque
 data:
   password: Z2hwXzZHdXJnWWltUWdlZjNNNFF6dklFeEtTM01XbDhJcDBiTHR5eQ==
@@ -12,7 +11,6 @@ data:
   url: >-
     aHR0cHM6Ly9naXRodWIuY29tL3NtYXJ0LXNjYWxlci9jdXN0b21lci1kZW1vLWFwcHMtc2FuZGJveC1hcmdvY2QuZ2l0
   username: cHJpeWFuay11cGFkaHlheQ==
-
 
 ---
 apiVersion: agent.smart-scaler.io/v1alpha1
@@ -23,15 +21,15 @@ spec:
   applicationDetails:
     services:
     - gitConfiguration:
-        branch: main
+        branch: marius/app-demo-thescore/
         path: charts/app1/values-override.yaml
         repository: https://github.com/smart-scaler/smartscaler-tutorials.git
         secretRef:
-          name: git-access-secret #github access secret name
+          name: git-access-secret
           namespace: smart-scaler
         minReplicasCustomKey: .smartscaler.minReplicas
         maxReplicasCustomKey: .smartscaler.maxReplicas
-        destinationContext: tutorial-agent
+        destinationContext: smart-scaler-agent-thescore
       scaledObjectConfig:
         kind: helm-values
         name: nginx
