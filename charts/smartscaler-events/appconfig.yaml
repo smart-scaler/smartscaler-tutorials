@@ -21,7 +21,7 @@ spec:
   applicationDetails:
     services:
     - gitConfiguration:
-        branch: marius/app-demo-thescore/
+        branch: marius/app-demo-thescore
         path: charts/app1/values-override.yaml
         repository: https://github.com/smart-scaler/smartscaler-tutorials.git
         secretRef:
