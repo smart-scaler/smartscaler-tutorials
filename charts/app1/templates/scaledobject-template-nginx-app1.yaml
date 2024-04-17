@@ -1,5 +1,5 @@
 # Sample template for a ScaledObject
-{{- if .Values.smartscaler.enabled }}
+{{- if .Value.smartscaler.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -8,13 +8,13 @@ spec:
   scaleTargetRef:
     kind: Deployment
     name: {{ .Values.smartscaler.deploymentName }}
-  minReplicaCount: {{ .Values.smartscaler.minReplicas }}
-  maxReplicaCount: {{ .Values.smartscaler.maxReplicas }}
+  minReplicaCount: {{ .Value.smartscaler.minReplicas }}
+  maxReplicaCount: {{ .Value.smartscaler.maxReplicas }}
   cooldownPeriod: 60
   pollingInterval: 1
   fallback:
     failureThreshold: 1
-    replicas: {{ .Values.smartscaler.maxReplicas }}
+    replicas: {{ .Value.smartscaler.maxReplicas }}
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
@@ -27,9 +27,9 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: {{ .Values.smartscaler.trigger.metadata.serverAddress }}
-        metricName: {{ .Values.smartscaler.trigger.metadata.metricName }}
+        serverAddress: {{ .Value.smartscaler.trigger.metadata.serverAddress }}
+        metricName: {{ .Value.smartscaler.trigger.metadata.metricName }}
         ignoreNullValues: "false"
-        query: {{ .Values.smartscaler.trigger.metadata.query }}
-        threshold: "{{ .Values.smartscaler.trigger.metadata.threshold }}"
+        query: {{ .Value.smartscaler.trigger.metadata.query }}
+        threshold: "{{ .Value.smartscaler.trigger.metadata.threshold }}"
 {{- end }}
