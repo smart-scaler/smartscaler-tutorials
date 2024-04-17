@@ -8,8 +8,8 @@ spec:
   scaleTargetRef:
     kind: Deployment
     name: {{ .Values.smartscaler.deploymentName }}
-  minReplicaCount: {{ .Value.smartscaler.minReplicas }}
-  maxReplicaCount: {{ .Value.smartscaler.maxReplicas }}
+  minReplicaCount: {{ .Values.smartscaler.minReplicas }}
+  maxReplicaCount: {{ .Values.smartscaler.maxReplicas }}
   cooldownPeriod: 60
   pollingInterval: 1
   fallback:
