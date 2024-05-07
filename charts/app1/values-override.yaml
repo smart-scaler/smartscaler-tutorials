@@ -4,7 +4,7 @@ autoscaling:
 # Example deployment override values file for nginx
 smartscaler:
   enabled: true
-  minReplicas: 10 # Updating for event: thetest
+  minReplicas: 1 # Resetting values after end of event: thetest
   maxReplicas: 600 # Updating for event: thetest
   trigger:
     type: prometheus
