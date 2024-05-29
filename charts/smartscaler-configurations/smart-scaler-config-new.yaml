@@ -18,7 +18,7 @@ namedGitSecrets:
 configGenerator:
   apps:
     # This is an example and needs to be removed
-    - app: app1
+    - app: acmefitness
       app_version: "1.0"
       namedDatasource: datadog
       aggregation_interval: 60 # optional
@@ -28,18 +28,18 @@ configGenerator:
         repository: https://github.com/smart-scaler/smartscaler-tutorials.git # url of the git repo
         secretRef: git-access-secret
       clusters:
-        - name: smart-scaler-prod-demoapp-cluster # name of the cluster
+        - name: acme-demo-cluster # name of the cluster
           namespaces:
-            - name: app1 # name of the namespace
+            - name: acmefitness # name of the namespace
               metricsType: istio
               deployments: # list of the deployments
-                - name: nginx # name of the deployment
+                - name: frontend # name of the deployment
                   eventConfig: # configurations for event auto-scaling
                     gitPath: "charts/app1/values-override.yaml"
-                # - name: cart # name of the deployment
-                #   eventConfig: # configurations for event auto-scaling
-                #     gitPath: "edge/sandbox/values-edge-us-west-2.yaml"
-                #     gitConfig:
-                #       branch: "main" # branch of the git repo
-                #       repository: https://sandbox-argocd.git # url of the git repo
-                #       secretRef: git-access-secret
+                - name: catalog # name of the deployment
+                  eventConfig: # configurations for event auto-scaling
+                    gitPath: "charts/app1/values-override.yaml"
+                    gitConfig:
+                      branch: "marius/app-demo-thescore" # branch of the git repo
+                      repository: https://github.com/smart-scaler/smartscaler-tutorials.git # url of the git repo
+                      secretRef: git-access-secret
