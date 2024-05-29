@@ -2,9 +2,12 @@ agentConfiguration:
   clientID: tenant-apollo
 
 namedDataSources:
-  - name: prometheus
-    datasourceType: prometheus
-    url: "http://10.100.248.141:9090"
+  - name: "datadog"
+    datasourceType: "datadog"
+    url: "https://api.us5.datadoghq.com"
+    credentials:
+      apiKey: "9cfe4744110c27d301dc885c9de05d2f"
+      appKey: "229ec69b1e2628f109862fb35eefd1020f43a375"
 
 namedGitSecrets:
   - name: git-access-secret
@@ -17,7 +20,7 @@ configGenerator:
     # This is an example and needs to be removed
     - app: app1
       app_version: "1.0"
-      namedDatasource: prometheus
+      namedDatasource: datadog
       aggregation_interval: 60 # optional
       scape_interval: 15 # optional
       gitConfig:
