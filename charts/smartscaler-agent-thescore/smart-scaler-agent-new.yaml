@@ -1,8 +1,8 @@
 inferenceAgent:
   inferenceAgentConfig:
-    # app_datasource:
-    #   prometheus:
-    #     url: http://10.100.248.141:9090
+    app_datasource:
+      datadog:
+        url: https://api.us5.datadoghq.com
     metric_interval: 60
     push_interval: 15
     smartscaler_api:
