@@ -2,9 +2,9 @@ agentConfiguration:
   clientID: tenant-apollo
 
 namedDataSources:
-  - name: dd
-    datasourceType: datadog
-    url: "https://api.us5.datadoghq.com/"
+  - name: prometheus
+    datasourceType: prometheus
+    url: "http://10.100.248.141:9090"
 
 namedGitSecrets:
   - name: git-access-secret
