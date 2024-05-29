@@ -87,6 +87,12 @@ spec:
           {{- else }}
           value: http://config-helper-api:8080
           {{- end}} 
+        - name: NAMESPACE
+          {{- if (.Release.Namespace) }}
+          value: {{ .Release.Namespace }}
+          {{- else }}
+          value: ""
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /
@@ -95,6 +101,10 @@ spec:
           httpGet:
             path: /
             port: 8080
+        volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            name: nginx-conf-volume
         resources:
         {{- if and
             (hasKey .Values "configHelper")
@@ -105,6 +115,10 @@ spec:
         {{- end}} 
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretsName }}
+      volumes:
+        - name: nginx-conf-volume
+          configMap:
+            name: config-helper-ui-nginx 
 ---
 apiVersion: v1
 kind: Service

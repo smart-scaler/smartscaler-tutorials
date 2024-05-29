@@ -58,9 +58,14 @@ eventAutoscaler:
 inferenceAgent:
   image:
     repository: aveshasystems/inference-agent
-    tag: v2.0.0
-    pullPolicy: IfNotPresent
+    tag: v2.1.0
+    pullPolicy: Always
   inferenceAgentConfig: {}
+  # app_datasource:
+  #  datadog:
+  #    url: ""
+  ########## If using Config Generator then only datasource needs to be provided in above section and app defination needs to defined below ####### 
+  ########## else if Config generator is not used then entire query needs to be defined as provided below #############  
   #Please add your config in this section in the following format
   # app_datasource:
   #  datadog:
@@ -81,6 +86,17 @@ inferenceAgent:
   #   - name: ""
   #     description: ""
   #     query: ""
+
+namedDataSources: # Only single datasource can be used for now
+  - name: ""
+    datasourceType: "" # prometheus/datadog
+    url: ""
+    credentials:
+      username: "" # For prometheus
+      password: "" # For prometheus
+      apiKey: "" # For datadog
+      appKey: "" # For datadog
+
 
 imagePullSecretsName: "smart-scaler-image-pull-secret"
 # leave the below fields empty if secrets are managed externally.
