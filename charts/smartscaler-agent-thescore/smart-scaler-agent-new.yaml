@@ -3,8 +3,8 @@ inferenceAgent:
     # app_datasource:
     #   prometheus:
     #     url: http://10.100.248.141:9090
-    # metric_interval: 60
-    # push_interval: 15
+    metric_interval: 60
+    push_interval: 15
     smartscaler_api:
       url: https://apigateway-apollo.saas1.smart-scaler.io
     smartscaler_job_name: app1-smart-scaler-agent
