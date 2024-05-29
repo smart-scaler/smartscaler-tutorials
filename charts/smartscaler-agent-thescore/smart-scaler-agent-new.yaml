@@ -23,6 +23,9 @@ namedDataSources:
   - name: "prometheus"
     datasourceType: "prometheus"
     url: "http://10.100.248.141:9090"
+    credentials:
+      username: "" # For prometheus
+      password: "" # For prometheus
 
 smartscalerApi:
   existingSecret: ""
