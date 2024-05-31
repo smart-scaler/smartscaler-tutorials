@@ -1,5 +1,7 @@
 autoscaling:
   enabled: true
+  minReplicas: 1
+  maxReplicas: 10
 # Example deployment override values file for nginx
 smartscaler:
   enabled: false
