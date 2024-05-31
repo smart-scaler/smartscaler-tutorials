@@ -4,7 +4,7 @@ autoscaling:
 smartscaler:
   enabled: true
   minReplicas: 1 # Resetting values after end of event: app1
-  maxReplicas: 1800 # Updating for event: app1
+  maxReplicas: 10 # Updating for event: app1
   trigger:
     type: datadog
     metadata:
