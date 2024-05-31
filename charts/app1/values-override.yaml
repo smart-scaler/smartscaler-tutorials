@@ -14,7 +14,7 @@ smartscaler:
       # query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
       # threshold: "1"
       # Datadog
-      serverAddress: ""
+      serverAddress: "http://inference-agent-service.smart-scaler.svc.cluster.local:8080/metrics"
       metricName: smartscaler_hpa_num_pods
       query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
       threshold: "1"
