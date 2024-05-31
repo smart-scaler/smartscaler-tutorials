@@ -1,4 +1,3 @@
-
 autoscaling:
   enabled: false
 # Example deployment override values file for nginx
@@ -7,9 +6,15 @@ smartscaler:
   minReplicas: 1 # Resetting values after end of event: thetest
   maxReplicas: 600 # Updating for event: thetest
   trigger:
-    type: prometheus
+    type: datadog
     metadata:
-      serverAddress: https://metricsgateway.2f396c0d.saas-sandbox.smart-scaler.io/
+      # Prometheus
+      # serverAddress: https://metricsgateway.2f396c0d.saas-sandbox.smart-scaler.io/
+      # metricName: smartscaler_hpa_num_pods
+      # query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
+      # threshold: "1"
+      # Datadog
+      serverAddress: ""
       metricName: smartscaler_hpa_num_pods
       query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
       threshold: "1"

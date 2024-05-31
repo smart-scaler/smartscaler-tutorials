@@ -24,8 +24,8 @@ namedDataSources:
     datasourceType: "datadog"
     url: "https://api.us5.datadoghq.com"
     credentials:
-      apiKey: "9cfe4744110c27d301dc885c9de05d2f"
-      appKey: "229ec69b1e2628f109862fb35eefd1020f43a375"
+      apiKey: "2fd9ff01c3dbdae51a3565198aae6e61"
+      appKey: "94f47f129255347a5979d5e54cc52a9c5bb0181a"
 
 smartscalerApi:
   existingSecret: ""
