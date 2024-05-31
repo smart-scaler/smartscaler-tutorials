@@ -6,7 +6,7 @@ autoscaling:
 smartscaler:
   enabled: false
   minReplicas: 1 # Resetting values after end of event: app1
-  maxReplicas: 30 # Updating for event: app1
+  maxReplicas: 10 # Resetting values after end of cooldown duration. Event: app1
   trigger:
     type: datadog
     metadata:
