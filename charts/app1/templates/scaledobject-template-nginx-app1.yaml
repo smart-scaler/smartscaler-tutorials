@@ -33,6 +33,7 @@ spec:
         query: {{ .Values.smartscaler.trigger.metadata.query }}
         threshold: "{{ .Values.smartscaler.trigger.metadata.threshold }}"
         authModes: basic
+        
       authenticationRef:
         name: keda-prom-creds
         kind: ClusterTriggerAuthentication

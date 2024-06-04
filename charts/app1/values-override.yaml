@@ -1,15 +1,22 @@
-
 autoscaling:
-  enabled: false
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
 # Example deployment override values file for nginx
 smartscaler:
-  enabled: true
-  minReplicas: 1 # Resetting values after end of event: Latam Event Test
-  maxReplicas: 10 # Resetting values after end of cooldown duration. Event: Latam Event Test
+  enabled: false
+  minReplicas: 1 # Resetting values after end of event: app1
+  maxReplicas: 10 # Updating for event: app1
   trigger:
-    type: prometheus
+    type: datadog
     metadata:
-      serverAddress: https://metricsgateway.apollo.saas.smart-scaler.io/
-      metricName: hpa_num_pods
-      query: hpa_num_pods{job="smartscaler_nginx_app1_tutorial-agent"}
+      # Prometheus
+      # serverAddress: https://metricsgateway.2f396c0d.saas-sandbox.smart-scaler.io/
+      # metricName: smartscaler_hpa_num_pods
+      # query: smartscaler_hpa_num_pods{ss_cluster_name="erics-gcp-cluster", ss_deployment_name="cartservice", ss_namespace="demo"}
+      # threshold: "1"
+      # Datadog
+      serverAddress: "http://inference-agent-service.smart-scaler.svc.cluster.local:8080/metrics"
+      metricName: smartscaler_hpa_num_pods
+      query: smartscaler_hpa_num_pods{ss_cluster_name="smart-scaler-prod-demoapp-cluster", ss_deployment_name="app1", ss_namespace="app1"}
       threshold: "1"

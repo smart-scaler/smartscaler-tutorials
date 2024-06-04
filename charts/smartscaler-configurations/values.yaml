@@ -1,0 +1,44 @@
+inferenceOverrideConfig: {}
+agentConfiguration:
+  # DO NOT CHANGE THIS
+  host: "" # URL of the host
+  # IMPORTANT: USER NEEDS TO CHANGE CLUSTERDISPLAYNAME TO MATCH THE CLUSTER NAME YOU DEFINED IN DATADOG/PROMETHEUS/NEW RELIC OR ANOTHER METRICS DATA SOURCE
+  clusterDisplayName: "" # Display name of the cluster
+  # DO NOT CHANGE THIS
+  clientID: "" # Client ID
+  # DO NOT CHANGE THIS
+  clientSecret: "" # Client secret
+
+namedDataSources:
+  - name: "" # Name of the data source
+    datasourceType: "" # Type of the data source
+    url: "" # URL of the data source
+
+configGenerator:
+  apps:
+    # - app: "" # Name of the app
+    #   app_version: "" # Version of the app
+    #   namedDatasource: "" # Name of the data source
+    #   aggregation_interval: "" # Aggregation interval (optional)
+    #   scape_interval: "" # Scape interval (optional)
+    #   gitConfig:
+    #     branch: "" # Branch of the git repo
+    #     repository: "" # URL of the git repo
+    #     secretRef: # Reference to the secret
+    #       name: "" # Name of the secret
+    #       namespace: "" # Namespace of the secret
+    #   clusters:
+    #     - name: "" # Name of the cluster
+    #       namespaces:
+    #         - name : "" # Name of the namespace
+    #           metricsType : "" # Type of metrics
+    #           deployments: # List of the deployments
+    #             - name: "" # Name of the deployment
+    #               eventConfig: # Configurations for event auto-scaling
+    #                 gitPath: "" # Path to the git repo
+    #                 gitConfig:
+    #                   branch: "" # Branch of the git repo
+    #                   repository: "" # URL of the git repo
+    #                   secretRef: # Reference to the secret
+    #                     name: "" # Name of the secret
+    #                     namespace: "" # Namespace of the secret

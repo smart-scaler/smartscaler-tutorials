@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-scaler-config
+  labels:
+    helm_template_generated: "true"
+data:
+{{- if and 
+        (hasKey .Values "configGenerator") 
+        ( .Values.configGenerator ) 
+        ( hasKey .Values.configGenerator "apps" ) 
+}}
+  inference-agent-config.yaml: |-
+    metric_interval: 60
+    push_interval: 15
+    app:
+    {{- $dataSources := .Values.namedDataSources }}
+    {{- range .Values.configGenerator.apps }}
+      - metric_labels:
+          app: "{{ .app }}"
+          app_version: "{{ .app_version }}"
+          customer: {{ $.Values.agentConfiguration.clientID }}
+        metrics:
+        {{- $namedDatasource := .namedDatasource }}
+        {{- $datasourceType := "" }}
+        {{- range $ds := $dataSources }}
+          {{- if eq $ds.name $namedDatasource }}
+            {{- $datasourceType = $ds.datasourceType }}
+          {{- end }}
+        {{- end }}
+        {{- if eq $datasourceType "" }}
+          {{- $datasourceType = "prometheus" }} # Default value if no match found
+        {{- end }}
+        {{- range $cluster := .clusters }}
+          {{- include "getListOfQueries" (tuple $datasourceType $cluster) }}
+        {{- end }}
+    {{- end }}
+    app_datasource: 
+      {{- range $ds := $.Values.namedDataSources }}
+      {{- if eq $ds.datasourceType "datadog" }}
+      datadog:
+        url: {{ $ds.url }}
+      {{- else if eq $ds.datasourceType "prometheus" }}
+      prometheus:
+        url: {{ $ds.url }}
+      {{- end }}
+      {{- end }}
+{{- else if and (hasKey .Values "inferenceOverrideConfig") ( .Values.inferenceOverrideConfig ) }}
+  inference-agent-config.yaml: |-
+    {{- toYaml .Values.inferenceOverrideConfig | nindent 4 }}
+{{- end }}
+---

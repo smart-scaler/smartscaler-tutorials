@@ -35,24 +35,43 @@ eventAutoscaler:
     repository: aveshasystems/agent-controller
     tag: v0.5.2
     pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
   gitOperationsService:
     name: git-operations
     image:
       repository: aveshasystems/autoscaler-git-operations
       tag: v0.2.6
       pullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 200Mi
 inferenceAgent:
   image:
-    repository: aveshasystems/smart-scaler-agent
-    tag: v1.8.1
-    pullPolicy: IfNotPresent
-  inferenceAgentConfig:
-    #  Please add your config in this section in the following format
-    app_datasource:
-      datadog:
-        url: ""
-      prometheus:
-        url: ""
+    repository: aveshasystems/inference-agent
+    tag: v2.1.0
+    pullPolicy: Always
+  inferenceAgentConfig: {}
+  # app_datasource:
+  #  datadog:
+  #    url: ""
+  ########## If using Config Generator then only datasource needs to be provided in above section and app defination needs to defined below #######
+  ########## else if Config generator is not used then entire query needs to be defined as provided below #############
+  #Please add your config in this section in the following format
+  # app_datasource:
+  #  datadog:
+  #    url: ""
+  #  prometheus:
+  #    url: ""
   # smartscaler_api:
   #   url: ""
   # metric_interval:
@@ -67,6 +86,16 @@ inferenceAgent:
   #   - name: ""
   #     description: ""
   #     query: ""
+
+namedDataSources: # Only single datasource can be used for now
+  - name: ""
+    datasourceType: "" # prometheus/datadog
+    url: ""
+    credentials:
+      username: "" # For prometheus
+      password: "" # For prometheus
+      apiKey: "" # For datadog
+      appKey: "" # For datadog
 
 imagePullSecretsName: "smart-scaler-image-pull-secret"
 # leave the below fields empty if secrets are managed externally.
@@ -106,16 +135,17 @@ configHelper:
     name: "config-helper-api"
     image:
       repository: aveshasystems/smartscaler-config-helper-api
-      tag: v1.0.0
+      tag: v1.0.4
       pullPolicy: IfNotPresent
 
     service:
       name: config-helper-api
       type: ClusterIP
-      port: 80
+      port: 8080
       targetPort: 8080
 
-    resources: {}
+    resources:
+      {}
       # limits:
       #  cpu: 100m
       #  memory: 128Mi
@@ -127,16 +157,17 @@ configHelper:
     name: "config-helper-ui"
     image:
       repository: aveshasystems/smartscaler-config-helper-ui
-      tag: v1.0.0
+      tag: v1.0.3
       pullPolicy: IfNotPresent
 
     service:
       name: config-helper-ui
       type: ClusterIP
-      port: 80
-      targetPort: 3000
+      port: 8080
+      targetPort: 8080
 
-    resources: {}
+    resources:
+      {}
       # limits:
       #  cpu: 100m
       #  memory: 128Mi

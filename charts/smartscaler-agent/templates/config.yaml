@@ -27,13 +27,55 @@ kind: ConfigMap
 metadata:
   name: agent-controller-manager-config
 --- 
+{{- if .Values.inferenceAgent.inferenceAgentConfig -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: smart-scaler-config
 data:
-  inference-agent-config.json: |
-        {{- toJson .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
+  inference-agent-config.yaml: |
+        {{- toYaml .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
+{{- end }}
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-helper-ui-nginx
+data:
+  nginx.conf: |
+        worker_processes 1;
+
+        events {
+            worker_connections 1024;
+        }
+
+        http {
+            include mime.types;
+            default_type application/octet-stream;
+            sendfile on;
+            
+            server {
+                listen 8080;
+                server_name localhost;
+
+                location /api/ {
+                    proxy_pass http://config-helper-api.{{.Release.Namespace}}.svc.cluster.local:8080;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+        
+                location / {
+                    root /usr/share/nginx/html;
+                    index index.html;
+                    try_files $uri /index.html;
+                }
+
+            }
+        }
 
 ---
 

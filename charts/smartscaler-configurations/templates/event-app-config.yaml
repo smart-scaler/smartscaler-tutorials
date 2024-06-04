@@ -1,0 +1,22 @@
+#  ApplicationConfig CRs for Event Auto-Scaling
+{{- if and 
+        (hasKey .Values "configGenerator") 
+        ( .Values.configGenerator ) 
+        ( hasKey .Values.configGenerator "apps" ) 
+}}
+{{- range $app := .Values.configGenerator.apps }}
+apiVersion: agent.smart-scaler.io/v1alpha1
+kind: ApplicationConfig
+metadata:
+  name: {{ $app.app }}
+  labels:
+    app: {{ $app.app | quote }}
+    app_version: {{ $app.app_version | quote }}
+    helm_template_generated: "true"
+spec:
+  applicationDetails:
+    services:
+{{- include "getListOfEventServices" (tuple .clusters $app $.Release.Namespace) }}
+---
+{{- end }}
+{{- end }}

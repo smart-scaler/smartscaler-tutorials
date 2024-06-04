@@ -83,18 +83,28 @@ spec:
               (hasKey .Values.configHelper.api "service")
               (hasKey .Values.configHelper.api.service "name")
           }}
-          value: http://{{ .Values.configHelper.api.service.name | default "NOT-PROVIDED" }}:80
+          value: http://{{ .Values.configHelper.api.service.name | default "NOT-PROVIDED" }}:8080
           {{- else }}
-          value: http://config-helper-api:80
+          value: http://config-helper-api:8080
           {{- end}} 
+        - name: NAMESPACE
+          {{- if (.Release.Namespace) }}
+          value: {{ .Release.Namespace }}
+          {{- else }}
+          value: ""
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /
-            port: http
+            port: 8080
         readinessProbe:
           httpGet:
             path: /
-            port: http
+            port: 8080
+        volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            name: nginx-conf-volume
         resources:
         {{- if and
             (hasKey .Values "configHelper")
@@ -105,6 +115,10 @@ spec:
         {{- end}} 
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretsName }}
+      volumes:
+        - name: nginx-conf-volume
+          configMap:
+            name: config-helper-ui-nginx 
 ---
 apiVersion: v1
 kind: Service
@@ -140,9 +154,9 @@ spec:
         (hasKey .Values.configHelper.ui "service")
         (hasKey .Values.configHelper.ui.service "targetPort")
       }}
-      targetPort: {{ .Values.configHelper.ui.service.targetPort | default "3000"}}
-      {{- else }}
-      targetPort: 3000
+      # targetPort: {{ .Values.configHelper.ui.service.targetPort | default "3000"}}
+      # {{- else }}
+      # targetPort: 3000
       {{- end}}
   {{- if and
     (hasKey .Values "configHelper")
