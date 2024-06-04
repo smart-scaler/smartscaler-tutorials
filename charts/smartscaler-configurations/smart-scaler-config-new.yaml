@@ -21,7 +21,7 @@ configGenerator:
       aggregation_interval: 60 # optional
       scape_interval: 15 # optional
       gitConfig:
-        branch: "marius/app-demo-thescore" # branch of the git repo
+        branch: "main" # branch of the git repo
         repository: https://github.com/smart-scaler/smartscaler-tutorials # url of the git repo
         secretRef: git-access-secret
       clusters:
@@ -34,7 +34,7 @@ configGenerator:
                   eventConfig: # configurations for event auto-scaling
                     gitPath: "charts/app1/values-override.yaml"
                     gitConfig: # These are the configurations for the git repository. It will override the global configurations.
-                      branch: "marius/app-demo-thescore" # branch of the git repo for the deployment
+                      branch: "main" # branch of the git repo for the deployment
                       repository: https://github.com/smart-scaler/smartscaler-tutorials # url of the git repo where deployment charts are stored
                       secretRef: git-access-secret # reference to the namedGitSecrets
                 # - name: cart # name of the deployment
