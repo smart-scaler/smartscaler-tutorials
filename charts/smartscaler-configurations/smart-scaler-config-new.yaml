@@ -1,0 +1,46 @@
+agentConfiguration:
+  clientID: tenant-apollo
+
+namedDataSources:
+  - name: "datadog"
+    datasourceType: "datadog"
+    url: "https://api.us5.datadoghq.com"
+
+namedGitSecrets:
+  - name: git-access-secret
+    gitUsername: wmariuss # Username
+    gitPassword: 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 # PAT token
+    url: https://github.com/smart-scaler/smartscaler-tutorials.git # URL of the git repository
+
+configGenerator:
+  apps:
+    # This is an example and needs to be removed
+    - app: app1
+      app_version: "1.0"
+      namedDatasource: datadog
+      aggregation_interval: 60 # optional
+      scape_interval: 15 # optional
+      gitConfig:
+        branch: "main" # branch of the git repo
+        repository: https://github.com/smart-scaler/smartscaler-tutorials # url of the git repo
+        secretRef: git-access-secret
+      clusters:
+        - name: smart-scaler-prod-demoapp-cluster # name of the cluster
+          namespaces:
+            - name: app1 # name of the namespace
+              metricsType: istio
+              deployments: # list of the deployments
+                - name: nginx # name of the deployment
+                  eventConfig: # configurations for event auto-scaling
+                    gitPath: "charts/app1/values-override.yaml"
+                    gitConfig: # These are the configurations for the git repository. It will override the global configurations.
+                      branch: "main" # branch of the git repo for the deployment
+                      repository: https://github.com/smart-scaler/smartscaler-tutorials # url of the git repo where deployment charts are stored
+                      secretRef: git-access-secret # reference to the namedGitSecrets
+                # - name: cart # name of the deployment
+                #   eventConfig: # configurations for event auto-scaling
+                #     gitPath: "edge/sandbox/values-edge-us-west-2.yaml"
+                #     gitConfig:
+                #       branch: "main" # branch of the git repo
+                #       repository: https://sandbox-argocd.git # url of the git repo
+                #       secretRef: git-access-secret

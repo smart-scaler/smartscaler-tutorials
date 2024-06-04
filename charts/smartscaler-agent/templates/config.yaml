@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-controller-autoscaler-config
+data:
+  autoscaler-properties.yaml: |
+       {{- toYaml .Values.eventAutoscaler.autoscalerProperties | nindent 4 }}
+  git-properties.yaml: |
+        {{- toYaml .Values.eventAutoscaler.gitProperties | nindent 4 }}
+---
+
+apiVersion: v1
+data:
+  controller_manager_config.yaml: |
+    apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
+    kind: ControllerManagerConfig
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+    leaderElection:
+      leaderElect: true
+      resourceName: 35a65c38.kubeslice.io
+kind: ConfigMap
+metadata:
+  name: agent-controller-manager-config
+--- 
+{{- if .Values.inferenceAgent.inferenceAgentConfig -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-scaler-config
+data:
+  inference-agent-config.yaml: |
+        {{- toYaml .Values.inferenceAgent.inferenceAgentConfig | nindent 4 }}
+{{- end }}
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-helper-ui-nginx
+data:
+  nginx.conf: |
+        worker_processes 1;
+
+        events {
+            worker_connections 1024;
+        }
+
+        http {
+            include mime.types;
+            default_type application/octet-stream;
+            sendfile on;
+            
+            server {
+                listen 8080;
+                server_name localhost;
+
+                location /api/ {
+                    proxy_pass http://config-helper-api.{{.Release.Namespace}}.svc.cluster.local:8080;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+        
+                location / {
+                    root /usr/share/nginx/html;
+                    index index.html;
+                    try_files $uri /index.html;
+                }
+
+            }
+        }
+
+---
+

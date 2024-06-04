@@ -1,0 +1,30 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Next Steps:
+
+*  Application configuration through Helm
+
+   - Download the template from UI and define your application configurations. Then install the smartscaler-configuration helm chart using the following command:
+
+     helm install smartscaler-configs smart-scaler/smartscaler-configurations -f app-config.yaml
+
+{{- if $.Values.configHelper.enabled }}
+OR
+*  Config helper UI:
+
+   - Access the config-helper tool by port-forwarding the services using the following command:
+
+     kubectl port-forward svc/config-helper-ui 9095:8080 -n smart-scaler
+
+   - Go to http://localhost:9095 in your browser to access the config-helper tool and follow the steps on the tool.
+{{- end }}
+
+
+To learn more about Smart Scaler visit: https://docs.avesha.io/documentation/enterprise-smartscaler
+
+
+
+
+
+
+   

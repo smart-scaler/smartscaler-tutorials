@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: git-operations
+  name: {{ .Values.eventAutoscaler.gitOperationsService.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git-operations
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: git-operations
+    spec:
+      containers:
+      - image: '{{ .Values.eventAutoscaler.gitOperationsService.image.repository }}:{{ .Values.eventAutoscaler.gitOperationsService.image.tag }}'
+        imagePullPolicy: {{ .Values.eventAutoscaler.gitOperationsService.image.pullPolicy }}
+        name: git-operations
+        env:
+        - name: AGENT_CONTROLLER_MANAGER_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: 8080
+        resources: {{- if (hasKey .Values.eventAutoscaler.gitOperationsService "resources") }}{{ toYaml .Values.eventAutoscaler.gitOperationsService.resources | nindent 12 }}{{- end }}
+      serviceAccountName: agent-controller-controller-manager
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretsName }}
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.eventAutoscaler.gitOperationsService.name }}
+spec:
+  selector:
+    app: git-operations
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

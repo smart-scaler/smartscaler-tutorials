@@ -1,0 +1,37 @@
+inferenceAgent:
+  inferenceAgentConfig:
+    app_datasource:
+      datadog:
+        url: https://api.us5.datadoghq.com
+    metric_interval: 60
+    push_interval: 15
+    smartscaler_api:
+      url: https://apigateway-apollo.saas1.smart-scaler.io
+    smartscaler_job_name: app1-smart-scaler-agent
+
+agentConfiguration:
+  host: https://gateway.saas1.smart-scaler.io
+  # Do not change this
+  # User needs to change clusterDisplayName to match the cluster name you defined in Datadog/Prometheus/New Relic or another metrics data source
+  clusterDisplayName: smart-scaler-agent
+  # Do not change this
+  clientID: tenant-apollo
+  # Do not change this
+  clientSecret: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXc # Fake token
+
+namedDataSources:
+  - name: "datadog"
+    datasourceType: "datadog"
+    url: "https://api.us5.datadoghq.com"
+    credentials:
+      apiKey: "9cfe4744110c27d301dc885c9"
+      appKey: "229ec69b1e2628f109862fb35"
+
+smartscalerApi:
+  existingSecret: ""
+  username: "tenant-apollo-apigw-user"
+  password: "Ts5FGwc" # Fake password
+smartscalerMetrics:
+  existingSecret: ""
+  username: "tenant-apollo-metricsgw-user"
+  password: "O3CNeU" # Fake password

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-agent
+  labels:
+    apps: inference-agent
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference-agent
+      version: v1
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port: '8080'
+      labels:
+        app: inference-agent
+        version: v1
+    spec:
+      restartPolicy: Always
+      volumes:
+        - name: config-volume
+          configMap:
+            name: smart-scaler-config
+            optional: true
+      containers:
+        - name: inference-agent
+          image: '{{ .Values.inferenceAgent.image.repository }}:{{ .Values.inferenceAgent.image.tag }}'
+          imagePullPolicy: {{ .Values.inferenceAgent.image.pullPolicy }}
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 500m
+          env:
+            - name: username_api
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "smartscalerApi.secretName" . }}
+                  key: username_api
+                  optional: true
+            - name: password_api
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "smartscalerApi.secretName" . }}
+                  key: password_api
+                  optional: true
+            - name: username_prom
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "prometheus.secretName" . }}
+                  key: username_prom
+                  optional: true
+            - name: password_prom
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "prometheus.secretName" . }}
+                  key: password_prom
+                  optional: true
+            - name: DD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "datadog.secretName" . }}
+                  key: DD_API_KEY
+                  optional: true
+            - name: DD_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "datadog.secretName" . }}
+                  key: DD_APP_KEY
+                  optional: true
+            - name: SAAS_API_HOST_URL
+              value: {{ required "A valid value is required!" .Values.agentConfiguration.host }}
+            - name: SMART_SCALER_AGENT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: clientId
+                  name: smart-scaler-agent-api-credentials
+                  optional: false
+            - name: SMART_SCALER_AGENT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: smart-scaler-agent-api-credentials
+                  optional: false
+          volumeMounts:
+            - name: config-volume
+              mountPath: /home/avesha/config
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretsName }}
+      serviceAccountName: agent-controller-controller-manager

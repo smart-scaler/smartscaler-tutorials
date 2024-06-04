@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keda-secrets
+spec:
+  project: smartscaler-tutorials
+  destination:
+    server: "https://34.134.95.101"
+    namespace: keda
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 2
+  sources:
+    - repoURL: https://github.com/smart-scaler/smartscaler-tutorials.git
+      targetRevision: HEAD
+      path: "charts/keda/"

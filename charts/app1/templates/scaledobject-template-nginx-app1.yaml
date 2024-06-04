@@ -1,0 +1,40 @@
+# PLEASE NOTE: SCALEDOBJECT WITH KEDA ONLY!
+{{- if .Values.smartscaler.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .Values.smartscaler.deploymentName }}-scaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: {{ .Values.smartscaler.deploymentName }}
+  minReplicaCount: {{ .Values.smartscaler.minReplicas }}
+  maxReplicaCount: {{ .Values.smartscaler.maxReplicas }}
+  cooldownPeriod: 60
+  pollingInterval: 1
+  fallback:
+    failureThreshold: 1
+    replicas: {{ .Values.smartscaler.maxReplicas }}
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 50
+              periodSeconds: 120
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: {{ .Values.smartscaler.trigger.metadata.serverAddress }}
+        metricName: {{ .Values.smartscaler.trigger.metadata.metricName }}
+        ignoreNullValues: "false"
+        query: {{ .Values.smartscaler.trigger.metadata.query }}
+        threshold: "{{ .Values.smartscaler.trigger.metadata.threshold }}"
+        authModes: basic
+        
+      authenticationRef:
+        name: keda-prom-creds
+        kind: ClusterTriggerAuthentication
+{{- end }}
