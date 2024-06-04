@@ -90,7 +90,7 @@ autoscaling:
 #   trigger: 
 #       type: prometheus
 #       metadata:
-#         serverAddress: https://metricsgateway.thescore.saas.smart-scaler.io/
+#         serverAddress: https://metricsgateway.saas.smart-scaler.io/
 #         metricName: hpa_num_pods
 #         query: |
 #           hpa_num_pods{kubernetes_pod_name="frontend"}

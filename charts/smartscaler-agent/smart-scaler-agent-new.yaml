@@ -13,7 +13,7 @@ agentConfiguration:
   host: https://gateway.saas1.smart-scaler.io
   # Do not change this
   # User needs to change clusterDisplayName to match the cluster name you defined in Datadog/Prometheus/New Relic or another metrics data source
-  clusterDisplayName: smart-scaler-agent-thescore-new
+  clusterDisplayName: smart-scaler-agent
   # Do not change this
   clientID: tenant-apollo
   # Do not change this
