@@ -1,4 +1,4 @@
-# Sample template for a ScaledObject
+# PLEASE NOTE: SCALEDOBJECT WITH KEDA ONLY!
 {{- if .Values.smartscaler.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
