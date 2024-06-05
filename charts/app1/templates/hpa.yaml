@@ -58,9 +58,9 @@ spec:
           name: smart_scaler.smartscaler_hpa_num_pods
           selector:
             matchLabels:
-              ss_deployment_name: nginx
-              ss_namespace: app1
-              ss_cluster_name: smart-scaler-prod-demoapp-cluster
+              ss_deployment_name: {{ .Values.smartscaler.metrics[0].external.metric.selector.matchLabels.ss_deployment_name }}
+              ss_namespace: {{ .Values.smartscaler.metrics[0].external.metric.selector.matchLabels.ss_namespace }}
+              ss_cluster_name: {{ .Values.smartscaler.metrics[0].external.metric.selector.matchLabels.ss_cluster_name }}
         target:
           type: AverageValue
           averageValue: "1"
