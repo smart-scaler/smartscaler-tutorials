@@ -6,5 +6,5 @@ autoscaling:
 # Example deployment override values file for nginx
 smartscaler:
   enabled: false
-  minReplicas: 1 # Resetting values after end of event: app1
-  maxReplicas: 10 # Updating for event: app1
+  minReplicas: 1 
+  maxReplicas: 10 
