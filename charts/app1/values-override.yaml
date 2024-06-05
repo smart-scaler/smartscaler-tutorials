@@ -8,3 +8,16 @@ smartscaler:
   enabled: false
   minReplicas: 1 
   maxReplicas: 10 
+  metrics: 
+    - type: External
+      external:
+        metric:
+          name: smart_scaler.smartscaler_hpa_num_pods
+          selector:
+            matchLabels:
+              ss_deployment_name: nginx
+              ss_namespace: app1
+              ss_cluster_name: smart-scaler-prod-demoapp-cluster
+        target:
+          type: AverageValue
+          averageValue: "1"
