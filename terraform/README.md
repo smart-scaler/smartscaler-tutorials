@@ -21,6 +21,6 @@ Install `Smart Scaler Agent` trough Terraform.
 
 		terraform apply -auto-approve
 
-* Destroy all the sevices that was applied in the Kubernetes cluster
+* Destroy all the services that was applied in the Kubernetes cluster
 
 		terraform destroy # and confirm with "yes"
