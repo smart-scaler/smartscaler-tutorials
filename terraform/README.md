@@ -9,6 +9,8 @@ Install `Smart Scaler Agent` trough Terraform.
 
 ## Usage
 
+* Update `values.yaml` file with the right configuration values
+
 * Init Terraform modules
 
 		terraform init
