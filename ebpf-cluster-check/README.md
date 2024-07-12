@@ -3,7 +3,7 @@
 
 This tool is used to check the prerequsites to run eBPF telemetry agent instances.
 
-# Steps
+# Usage
 
 ## Script
 
