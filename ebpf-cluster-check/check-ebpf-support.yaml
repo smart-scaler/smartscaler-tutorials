@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ebpf-cluster-check
+spec:
+  selector:
+    matchLabels:
+      app: ebpf-cluster-check
+  template:
+    metadata:
+      labels:
+        app: ebpf-cluster-check
+    spec:
+      containers:
+      - name: ebpf-cluster-check
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Linux distro and version:"
+            cat /host-os-release | grep PRETTY_NAME | sed -e 's/PRETTY_NAME=//'
+            echo "Kernel version:"
+            uname -r
+            echo "Check for BTF support:"
+            if [ -f /sys/kernel/btf/vmlinux ]; then
+              echo "BPF Type Format (BTF) support is present in the kernel."
+              echo "eBPF telemetry agent is compatible with this Kubernetes cluster."
+            else
+              echo "File /sys/kernel/btf/vmlinux is not present"
+              echo "BPF Type Format (BTF) support is missing from the kernel!"
+              echo "eBPF telemetry agent is incompatible with this Kubernetes cluster!"
+              exit
+            fi
+            sleep 600
+        resources:
+          requests:
+            memory: "8Mi"
+            cpu: "100m"
+          limits:
+            memory: "16Mi"
+            cpu: "200m"
+        volumeMounts:
+        - mountPath: /host-os-release
+          name: host-os-release
+          readOnly: true
+        - mountPath: /sys/kernel
+          name: kernel-sys
+          readOnly: true
+      volumes:
+      - name: host-os-release
+        hostPath:
+          path: /etc/os-release
+          type: File
+      - name: kernel-sys
+        hostPath:
+          path: /sys/kernel
+          type: Directory
