@@ -3,7 +3,16 @@
 
 This tool is used to check the prerequsites to run eBPF telemetry agent instances.
 
-# Steps
+# Usage
+
+## Script
+
+A wrapper shell script is available to simplify the process.
+
+```console
+./ebpf-check.sh
+```
+## Manual
 
 Create a test namespace using the next command:
 ```console
@@ -12,7 +21,7 @@ kubectl create ns test-ebpf
 
 Deploy the eBPF test manifest using the next command:
 ```console
-kubectl -n test-ebpf apply -f https://raw.githubusercontent.com/smart-scaler/tools-ebpf-cluster-check/main/check-ebpf-support.yaml
+kubectl -n test-ebpf apply -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/check-ebpf-support.yaml
 ```
 
 Check the test PODs are running successfully on all the cluster nodes:
@@ -67,15 +76,9 @@ eBPF telemetry agent is incompatible with this Kubernetes cluster!
 Last step is to perform clean-up, removing test deployment and namespace:
 
 ```console
-kubectl -n test-ebpf delete -f https://raw.githubusercontent.com/smart-scaler/tools-ebpf-cluster-check/main/check-ebpf-support.yaml
+kubectl -n test-ebpf delete -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/check-ebpf-support.yaml
 ```
 
 ```console
 kubectl delete ns test-ebpf
-```
-
-A wrapper shell script is available to simplify the process.
-
-```console
-./ebpf-check.sh
 ```
