@@ -3,7 +3,7 @@
 TEST_EBPF_NAMESPACE="test-ebpf"
 
 kubectl create ns ${TEST_EBPF_NAMESPACE}
-kubectl -n ${TEST_EBPF_NAMESPACE} apply -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/check-ebpf-support.yaml
+kubectl -n ${TEST_EBPF_NAMESPACE} apply -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/ebpf-cluster-check/check-ebpf-support.yaml
 
 echo "Wait for the deployment to complete ..."
 while [ true ]; do
@@ -33,5 +33,5 @@ echo "#########################################################################"
 
 # Clean-up steps
 echo "Clean-up the test deployment ..."
-kubectl -n ${TEST_EBPF_NAMESPACE} delete -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/check-ebpf-support.yaml 2>&1 > /dev/null
+kubectl -n ${TEST_EBPF_NAMESPACE} delete -f https://raw.githubusercontent.com/smart-scaler/smartscaler-tutorials/main/ebpf-cluster-check/check-ebpf-support.yaml 2>&1 > /dev/null
 kubectl delete ns ${TEST_EBPF_NAMESPACE} 2>&1 > /dev/null
